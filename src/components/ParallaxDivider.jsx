@@ -4,6 +4,7 @@
  * while the next section scrolls over it from below.
  */
 export default function ParallaxDivider({ image, height = '340px', overlay = 'rgba(20,10,4,0.45)', children }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
   return (
     <div
       style={{
@@ -13,7 +14,7 @@ export default function ParallaxDivider({ image, height = '340px', overlay = 'rg
         backgroundImage: `url('${image}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         overflow: 'hidden',
       }}
     >

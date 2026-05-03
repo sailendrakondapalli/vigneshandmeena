@@ -49,6 +49,9 @@ const HERO_PETALS = Array.from({ length: 25 }, (_, i) => ({
 }))
 
 export default function Home() {
+  // backgroundAttachment: fixed is GPU-expensive on mobile — use scroll on small screens
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
   return (
     <section
       id="home"
@@ -62,8 +65,8 @@ export default function Home() {
         overflow: 'hidden',
         backgroundImage: `url(${heroBg})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center', 
-        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       }}
     >
       {/* Dark overlay */}

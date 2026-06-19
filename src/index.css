@@ -9,7 +9,6 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
   scrollbar-width: none;
 }
 
@@ -21,10 +20,10 @@ body {
   font-family: 'Lato', sans-serif;
   background-color: #faf8f3;
   color: #2d1b0e;
-  overflow-x: hidden;
   width: 100%;
   min-width: 320px;
   scrollbar-width: none; /* Firefox */
+  overflow-x: clip; /* clip without creating scroll container */
 }
 
 body::-webkit-scrollbar {
@@ -39,7 +38,6 @@ body::-webkit-scrollbar {
   padding: 0 !important;
   text-align: unset !important;
   border: none !important;
-  min-height: 100vh;
   display: block !important;
 }
 
@@ -98,6 +96,42 @@ body::-webkit-scrollbar {
 @keyframes floatUp {
   0%   { transform: translateY(0) rotate(0deg); opacity: 0.5; }
   100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* ── Parallax scroll-over layering ──────────────────────────────────────
+   ParallaxDivider strips use background-attachment:fixed (desktop) or
+   an absolutely positioned image (mobile), both inside overflow:hidden.
+   Content sections sit at z-index:1 with solid opaque backgrounds so
+   they scroll over the image strips naturally on all devices.
+──────────────────────────────────────────────────────────────────────── */
+section,
+footer {
+  position: relative;
+  z-index: 1;
+  background-color: #faf8f3;
+}
+
+/* Home hero has its own full bg image — keep it dark */
+#home {
+  background-color: #1a0a04;
+}
+
+/* Parallax strip — must stay transparent so the bg image shows */
+.parallax-strip {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Desktop: show CSS fixed bg, hide the mobile img */
+@media (min-width: 768px) {
+  .parallax-bg-mobile { display: none !important; }
+  .parallax-bg-desktop { display: block; }
+}
+
+/* Mobile: hide CSS fixed bg (broken on iOS), show the img */
+@media (max-width: 767px) {
+  .parallax-bg-desktop { display: none !important; }
+  .parallax-bg-mobile { display: block; }
 }
 
 /* Scroll-to-top */

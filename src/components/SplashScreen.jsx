@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useLang } from '../context/LanguageContext'
 
 // Rose petal — varied shapes, colors, drift
 function Petal({ delay, x, rotate, size, color, drift }) {
@@ -214,6 +215,7 @@ const PETALS = Array.from({ length: 40 }, (_, i) => ({
 
 export default function SplashScreen({ onComplete }) {
   const [phase, setPhase] = useState('walk')
+  const { t } = useLang()
 
   useEffect(() => {
     const timers = [
@@ -347,7 +349,7 @@ export default function SplashScreen({ onComplete }) {
                   style={{ color: '#b8860b', fontFamily: 'Lato,sans-serif', fontSize: 'clamp(9px,2vw,11px)', letterSpacing: '0.45em', textTransform: 'uppercase', marginBottom: '14px' }}
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
                 >
-                  Wedding Invitation
+                  {t.splash_label}
                 </motion.p>
 
                 <motion.h1
@@ -355,7 +357,7 @@ export default function SplashScreen({ onComplete }) {
                   style={{ color: '#4a2c1a', fontSize: 'clamp(1.5rem,5vw,2.8rem)', lineHeight: 1.2 }}
                   initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
                 >
-                  Dr. M. Vignesh
+                  {t.gate_groomName}
                 </motion.h1>
 
                 <motion.p
@@ -371,7 +373,7 @@ export default function SplashScreen({ onComplete }) {
                   style={{ color: '#4a2c1a', fontSize: 'clamp(1.5rem,5vw,2.8rem)', lineHeight: 1.2 }}
                   initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
                 >
-                  V. Shalini
+                  {t.gate_brideName}
                 </motion.h1>
 
                 <motion.p
@@ -379,7 +381,7 @@ export default function SplashScreen({ onComplete }) {
                   style={{ color: '#8b6914', fontSize: 'clamp(0.9rem,2.5vw,1.2rem)', fontStyle: 'italic', marginTop: '10px' }}
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85 }}
                 >
-                  27 May 2026 · Kumbakonam
+                  {t.splash_datePlace}
                 </motion.p>
               </motion.div>
             )}

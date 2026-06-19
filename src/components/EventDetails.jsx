@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import useHighlight from '../hooks/useHighlight'
+import { useLang } from '../context/LanguageContext'
 
 const ECGIcon = () => (
   <svg viewBox="0 0 80 24" width="80" height="24">
-    <path d="M0,12 L16,12 L22,2 L28,22 L34,6 L40,12 L80,12"
-      stroke="#d4af37" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+    <path d="M0,12 L16,12 L22,2 L28,22 L34,6 L40,12 L80,12" stroke="#d4af37" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
   </svg>
 )
 
-function FlipCard({ title, date, time, venue, accent, icon, backContent, delay, inView }) {
+function FlipCard({ title, date, time, venue, accent, icon, backContent, delay, inView, tapReveal, tapBack }) {
   const [flipped, setFlipped] = useState(false)
   const cardHeight = 'clamp(300px,42vw,400px)'
 
@@ -19,36 +19,24 @@ function FlipCard({ title, date, time, venue, accent, icon, backContent, delay, 
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
       onClick={() => setFlipped(f => !f)}
-      style={{
-        perspective: '1200px',
-        cursor: 'pointer',
-        height: cardHeight,
-        width: '100%',
-      }}
+      style={{ perspective: '1200px', cursor: 'pointer', height: cardHeight, width: '100%' }}
     >
       <motion.div
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-          transformStyle: 'preserve-3d',
-        }}
+        style={{ position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d' }}
       >
         {/* FRONT */}
         <div style={{
           position: 'absolute', inset: 0,
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
           borderRadius: '20px',
           padding: 'clamp(24px,4vw,44px) clamp(20px,4vw,36px)',
           display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
           background: 'rgba(255,255,255,0.82)',
           border: `1px solid ${accent}45`,
           boxShadow: `0 10px 44px ${accent}20`,
-          backdropFilter: 'blur(14px)',
-          overflow: 'hidden',
+          backdropFilter: 'blur(14px)', overflow: 'hidden',
         }}>
           <div style={{ position: 'absolute', top: 0, left: '10%', right: '10%', height: '2px', borderRadius: '999px', background: `linear-gradient(90deg,transparent,${accent},transparent)` }} />
           <div style={{ fontSize: '2rem', marginBottom: '14px' }}>{icon}</div>
@@ -66,15 +54,14 @@ function FlipCard({ title, date, time, venue, accent, icon, backContent, delay, 
             animate={{ opacity: [0.4, 0.9, 0.4] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            Tap to reveal ›
+            {tapReveal}
           </motion.p>
         </div>
 
         {/* BACK */}
         <div style={{
           position: 'absolute', inset: 0,
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
           transform: 'rotateY(180deg)',
           borderRadius: '20px',
           padding: 'clamp(24px,4vw,44px) clamp(20px,4vw,36px)',
@@ -82,16 +69,13 @@ function FlipCard({ title, date, time, venue, accent, icon, backContent, delay, 
           background: `linear-gradient(135deg, ${accent}18, ${accent}06)`,
           border: `1px solid ${accent}50`,
           boxShadow: `0 10px 44px ${accent}25`,
-          backdropFilter: 'blur(14px)',
-          overflow: 'hidden',
+          backdropFilter: 'blur(14px)', overflow: 'hidden',
         }}>
           <div style={{ position: 'absolute', top: 0, left: '10%', right: '10%', height: '2px', borderRadius: '999px', background: `linear-gradient(90deg,transparent,${accent},transparent)` }} />
           <div style={{ position: 'absolute', bottom: 0, left: '10%', right: '10%', height: '2px', borderRadius: '999px', background: `linear-gradient(90deg,transparent,${accent},transparent)` }} />
-
           <svg viewBox="0 0 24 24" width="28" height="28" fill={accent} style={{ marginBottom: '14px', opacity: 0.85 }}>
             <path d="M12 2L13.5 8.5L20 7L15.5 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L8.5 12L4 7L10.5 8.5Z"/>
           </svg>
-
           {backContent.map((item, i) => (
             <div key={i} style={{ marginBottom: i < backContent.length - 1 ? '14px' : 0, width: '100%' }}>
               <p style={{ color: accent, fontFamily: 'Lato,sans-serif', fontSize: 'clamp(8px,1.5vw,10px)', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '4px' }}>
@@ -100,18 +84,15 @@ function FlipCard({ title, date, time, venue, accent, icon, backContent, delay, 
               <p className="font-cormorant" style={{ color: '#4a2c1a', fontSize: 'clamp(0.9rem,2.2vw,1.15rem)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                 {item.value}
               </p>
-              {i < backContent.length - 1 && (
-                <div style={{ width: '40px', height: '1px', background: `${accent}40`, margin: '10px auto 0' }} />
-              )}
+              {i < backContent.length - 1 && <div style={{ width: '40px', height: '1px', background: `${accent}40`, margin: '10px auto 0' }} />}
             </div>
           ))}
-
           <motion.p
             style={{ color: accent, fontFamily: 'Lato,sans-serif', fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: '14px', opacity: 0.6 }}
             animate={{ opacity: [0.3, 0.7, 0.3] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            ‹ Tap to go back
+            {tapBack}
           </motion.p>
         </div>
       </motion.div>
@@ -121,17 +102,17 @@ function FlipCard({ title, date, time, venue, accent, icon, backContent, delay, 
 
 export default function EventDetails() {
   const [ref, inView] = useHighlight(0.12)
+  const { t } = useLang()
 
   const weddingBack = [
-    { label: 'Dress Code', value: 'Traditional / Ethnic Wear\nSaree, Dhoti, Kurta welcome' },
-    { label: 'Muhurtham', value: '9:00 AM sharp\nPlease arrive by 8:30 AM' },
-    { label: 'Blessings', value: '"May your presence fill our hearts\nwith joy and our home with love"' },
+    { label: t.event_dressCode, value: t.event_b2_dress },
+    { label: t.event_muhurtham, value: t.event_b2_muh },
+    { label: t.event_blessings, value: t.event_b2_bless },
   ]
-
   const receptionBack = [
-    { label: 'Dress Code', value: 'Formal / Semi-formal\nElegant & festive attire' },
-    { label: 'Programme', value: 'Dinner & Celebrations\nMusic · Dance · Memories' },
-    { label: 'Note', value: '"Your smile is our decoration,\nyour blessing our greatest gift"' },
+    { label: t.event_dressCode, value: t.event_b1_dress },
+    { label: t.event_programme, value: t.event_b1_prog },
+    { label: t.event_note,      value: t.event_b1_note },
   ]
 
   return (
@@ -144,49 +125,47 @@ export default function EventDetails() {
       {inView && <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse 70% 50% at 50% 0%,rgba(212,175,55,0.09) 0%,transparent 70%)' }} />}
 
       <div style={{ width: '100%', maxWidth: '960px', margin: '0 auto', padding: '0 clamp(16px,5vw,40px)' }}>
-
         <motion.div
           style={{ textAlign: 'center', marginBottom: 'clamp(32px,5vw,56px)' }}
           initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}
         >
           <p style={{ color: '#b8860b', fontFamily: 'Lato,sans-serif', fontSize: 'clamp(9px,1.5vw,11px)', letterSpacing: '0.4em', textTransform: 'uppercase', marginBottom: '12px' }}>
-            Save the Date
+            {t.event_label}
           </p>
           <h2 className="font-playfair" style={{ color: '#4a2c1a', fontSize: 'clamp(1.8rem,5vw,3rem)', marginBottom: '16px' }}>
-            Event Details
+            {t.event_heading}
           </h2>
           <div className="gold-divider" />
           <p style={{ color: '#8b6914', fontFamily: 'Lato,sans-serif', fontSize: 'clamp(10px,1.8vw,12px)', marginTop: '12px', letterSpacing: '0.08em' }}>
-            Tap each card to discover more
+            {t.event_tapHint}
           </p>
         </motion.div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 'clamp(16px,3vw,40px)', alignItems: 'stretch' }}>
           <FlipCard
-            title="Reception"
-            date="26 May 2026"
-            time="6:30 PM onwards"
-            venue="Venue details to follow"
-            icon="🎉"
-            accent="#b8860b"
+            title={t.event_card1Title}
+            date={t.event_card1Date}
+            time={t.event_card1Time}
+            venue={t.event_card1Venue}
+            icon="💌" accent="#b8860b"
             backContent={receptionBack}
-            delay={0.1}
-            inView={inView}
+            delay={0.1} inView={inView}
+            tapReveal={t.event_tapReveal}
+            tapBack={t.event_tapBack}
           />
           <FlipCard
-            title="Wedding Ceremony"
-            date="27 May 2026"
-            time="9:00 AM – 10:30 AM"
-            venue="Raya Mahal A/C, Kumbakonam"
-            icon="💍"
-            accent="#8b1a2f"
+            title={t.event_card2Title}
+            date={t.event_card2Date}
+            time={t.event_card2Time}
+            venue={t.event_card2Venue}
+            icon="💍" accent="#8b1a2f"
             backContent={weddingBack}
-            delay={0.22}
-            inView={inView}
+            delay={0.22} inView={inView}
+            tapReveal={t.event_tapReveal}
+            tapBack={t.event_tapBack}
           />
         </div>
 
-        {/* ECG strip */}
         <motion.div
           style={{ marginTop: 'clamp(32px,5vw,56px)', display: 'flex', justifyContent: 'center' }}
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 0.4 }}

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import useHighlight from '../hooks/useHighlight'
+import { useLang } from '../context/LanguageContext'
 
-const TARGET = new Date('2026-05-27T09:00:00')
+const TARGET = new Date('2026-07-02T19:00:00')
 
 function getTimeLeft() {
   const diff = TARGET - new Date()
@@ -25,31 +26,18 @@ function TimeBox({ value, label, inView, delay }) {
       whileHover={{ scale: 1.08, y: -4 }}
     >
       <div style={{
-        width: 'clamp(64px,12vw,120px)',
-        height: 'clamp(64px,12vw,120px)',
+        width: 'clamp(64px,12vw,120px)', height: 'clamp(64px,12vw,120px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         borderRadius: '14px',
         background: 'linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.05))',
         border: '1px solid rgba(212,175,55,0.5)',
         boxShadow: '0 6px 28px rgba(212,175,55,0.15), inset 0 1px 0 rgba(212,175,55,0.25)',
       }}>
-        <span className="font-playfair" style={{
-          color: '#d4af37',
-          fontSize: 'clamp(1.5rem,4vw,3rem)',
-          fontWeight: 600,
-          lineHeight: 1,
-        }}>
+        <span className="font-playfair" style={{ color: '#d4af37', fontSize: 'clamp(1.5rem,4vw,3rem)', fontWeight: 600, lineHeight: 1 }}>
           {String(value).padStart(2, '0')}
         </span>
       </div>
-      <span style={{
-        marginTop: '10px',
-        fontSize: 'clamp(9px,1.5vw,12px)',
-        letterSpacing: '0.2em',
-        textTransform: 'uppercase',
-        color: '#8b6914',
-        fontFamily: 'Lato, sans-serif',
-      }}>
+      <span style={{ marginTop: '10px', fontSize: 'clamp(9px,1.5vw,12px)', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#8b6914', fontFamily: 'Lato, sans-serif' }}>
         {label}
       </span>
     </motion.div>
@@ -59,22 +47,18 @@ function TimeBox({ value, label, inView, delay }) {
 export default function Countdown() {
   const [time, setTime] = useState(getTimeLeft())
   const [ref, inView] = useHighlight(0.15)
+  const { t } = useLang()
 
   useEffect(() => {
-    const t = setInterval(() => setTime(getTimeLeft()), 1000)
-    return () => clearInterval(t)
+    const timer = setInterval(() => setTime(getTimeLeft()), 1000)
+    return () => clearInterval(timer)
   }, [])
 
   return (
     <section
       ref={ref}
       className={`section-highlight${inView ? ' in-view' : ''}`}
-      style={{
-        position: 'relative',
-        width: '100%',
-        padding: 'clamp(64px,10vw,120px) 0',
-        background: 'linear-gradient(180deg,#faf8f3 0%,#f5ead6 100%)',
-      }}
+      style={{ position: 'relative', width: '100%', padding: 'clamp(64px,10vw,120px) 0', background: 'linear-gradient(180deg,#faf8f3 0%,#f5ead6 100%)' }}
     >
       <div className="section-line" />
       {inView && (
@@ -85,32 +69,31 @@ export default function Countdown() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
             <svg viewBox="0 0 160 30" style={{ width: 'clamp(100px,20vw,160px)', height: '30px' }}>
-              <path d="M0,15 L30,15 L40,15 L46,3 L52,27 L58,8 L64,15 L80,15 L160,15"
-                stroke="#d4af37" strokeWidth="1.5" fill="none" opacity="0.7"/>
+              <path d="M0,15 L30,15 L40,15 L46,3 L52,27 L58,8 L64,15 L80,15 L160,15" stroke="#d4af37" strokeWidth="1.5" fill="none" opacity="0.7"/>
             </svg>
           </div>
           <p style={{ color: '#b8860b', fontFamily: 'Lato,sans-serif', fontSize: 'clamp(9px,1.5vw,11px)', letterSpacing: '0.45em', textTransform: 'uppercase', marginBottom: '12px' }}>
-            Counting down to our special day
+            {t.countdown_label}
           </p>
           <h2 className="font-playfair" style={{ color: '#4a2c1a', fontSize: 'clamp(1.8rem,5vw,3rem)', marginBottom: '8px' }}>
-            27 May 2026
+            {t.countdown_date}
           </h2>
           <p className="font-cormorant" style={{ color: '#8b6914', fontSize: 'clamp(1rem,2.5vw,1.4rem)', fontStyle: 'italic', marginBottom: 'clamp(28px,5vw,48px)' }}>
-            9:00 AM — Raya Mahal A/C, Kumbakonam
+            {t.countdown_venue}
           </p>
         </motion.div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(8px,2.5vw,32px)', flexWrap: 'nowrap' }}>
-          <TimeBox value={time.days}    label="Days"    inView={inView} delay={0.1} />
+          <TimeBox value={time.days}    label={t.countdown_days}    inView={inView} delay={0.1} />
           <motion.span className="font-playfair" style={{ color: '#d4af37', fontSize: 'clamp(1.5rem,4vw,2.5rem)', paddingBottom: '28px', userSelect: 'none' }}
             initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.2 }}>:</motion.span>
-          <TimeBox value={time.hours}   label="Hours"   inView={inView} delay={0.2} />
+          <TimeBox value={time.hours}   label={t.countdown_hours}   inView={inView} delay={0.2} />
           <motion.span className="font-playfair" style={{ color: '#d4af37', fontSize: 'clamp(1.5rem,4vw,2.5rem)', paddingBottom: '28px', userSelect: 'none' }}
             initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}>:</motion.span>
-          <TimeBox value={time.minutes} label="Minutes" inView={inView} delay={0.3} />
+          <TimeBox value={time.minutes} label={t.countdown_minutes} inView={inView} delay={0.3} />
           <motion.span className="font-playfair" style={{ color: '#d4af37', fontSize: 'clamp(1.5rem,4vw,2.5rem)', paddingBottom: '28px', userSelect: 'none' }}
             initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}>:</motion.span>
-          <TimeBox value={time.seconds} label="Seconds" inView={inView} delay={0.4} />
+          <TimeBox value={time.seconds} label={t.countdown_seconds} inView={inView} delay={0.4} />
         </div>
       </div>
     </section>

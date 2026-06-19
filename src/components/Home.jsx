@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import heroBg from '../assets/herobg.jpeg'
+import { useLang } from '../context/LanguageContext'
 
-// Continuously falling petal for hero
 function FallingPetal({ x, delay, duration, size, color, drift }) {
   return (
     <motion.div
@@ -19,13 +19,7 @@ function FallingPetal({ x, delay, duration, size, color, drift }) {
         x: [0, drift, -drift * 0.6, drift * 0.3, 0],
         opacity: [0, 0.7, 0.7, 0],
       }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: 'linear',
-        repeatDelay: 0,
-      }}
+      transition={{ duration, delay, repeat: Infinity, ease: 'linear', repeatDelay: 0 }}
     />
   )
 }
@@ -49,49 +43,30 @@ const HERO_PETALS = Array.from({ length: 25 }, (_, i) => ({
 }))
 
 export default function Home() {
-  // backgroundAttachment: fixed is GPU-expensive on mobile — use scroll on small screens
+  const { t } = useLang()
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   return (
     <section
       id="home"
       style={{
-        position: 'relative',
-        width: '100%',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        position: 'relative', width: '100%', minHeight: '100vh',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden',
         backgroundImage: `url(${heroBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: 'cover', backgroundPosition: 'center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       }}
     >
-      {/* Dark overlay */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to bottom, rgba(30,15,5,0.5) 0%, rgba(30,15,5,0.68) 60%, rgba(30,15,5,0.82) 100%)'
-      }} />
-
-      {/* Continuously falling petals */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(30,15,5,0.5) 0%, rgba(30,15,5,0.68) 60%, rgba(30,15,5,0.82) 100%)' }} />
       {HERO_PETALS.map(p => <FallingPetal key={p.id} {...p} />)}
 
-      {/* Content */}
-      <div style={{
-        position: 'relative', zIndex: 10,
-        textAlign: 'center',
-        width: '100%',
-        maxWidth: '720px',
-        margin: '0 auto',
-        padding: '80px 24px 60px',
-      }}>
+      <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', width: '100%', maxWidth: '720px', margin: '0 auto', padding: '80px 24px 60px' }}>
         <motion.p
           style={{ color: '#d4af37', fontFamily: 'Lato,sans-serif', fontSize: '11px', letterSpacing: '0.45em', textTransform: 'uppercase', marginBottom: '16px' }}
           initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Wedding Invitation
+          {t.home_label}
         </motion.p>
 
         <motion.div className="gold-divider" style={{ marginBottom: '28px' }}
@@ -100,10 +75,10 @@ export default function Home() {
 
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.5 }}>
           <h1 className="font-playfair" style={{ color: '#fdf8ee', fontSize: 'clamp(2rem, 6vw, 4.5rem)', lineHeight: 1.15, marginBottom: '4px' }}>
-            Dr. M. Vignesh
+            {t.gate_groomName}
           </h1>
           <p className="font-cormorant" style={{ color: '#d4af37', fontSize: 'clamp(1.1rem, 2.5vw, 1.75rem)', fontStyle: 'italic', marginBottom: '8px' }}>
-            M.B.B.S.
+            {t.gate_groomQual}
           </p>
         </motion.div>
 
@@ -116,10 +91,10 @@ export default function Home() {
 
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.9 }}>
           <h1 className="font-playfair" style={{ color: '#fdf8ee', fontSize: 'clamp(2rem, 6vw, 4.5rem)', lineHeight: 1.15, marginBottom: '4px' }}>
-            V. Shalini
+            {t.gate_brideName}
           </h1>
           <p className="font-cormorant" style={{ color: '#d4af37', fontSize: 'clamp(1.1rem, 2.5vw, 1.75rem)', fontStyle: 'italic' }}>
-            D.Pharm.
+            {t.gate_brideQual}
           </p>
         </motion.div>
 
@@ -131,21 +106,20 @@ export default function Home() {
           style={{ color: '#e8d5b0', fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', fontStyle: 'italic', marginBottom: '12px' }}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1.2 }}
         >
-          "A union of care, compassion &amp; commitment"
+          {t.home_quote}
         </motion.p>
 
         <motion.p
           style={{ color: '#c4a882', fontFamily: 'Lato,sans-serif', fontSize: 'clamp(0.8rem, 1.8vw, 1rem)', letterSpacing: '0.05em' }}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1.4 }}
         >
-          S. Murugaiyan – M. Chitra request your gracious presence
+          {t.home_dateTime}
         </motion.p>
 
-        {/* Scroll cue */}
         <motion.div style={{ marginTop: '48px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1.8 }}
         >
-          <p style={{ color: '#d4af37', fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '8px' }}>Scroll</p>
+          <p style={{ color: '#d4af37', fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '8px' }}>↓</p>
           <motion.div style={{ width: '1px', height: '40px', background: 'linear-gradient(to bottom, #d4af37, transparent)' }}
             animate={{ scaleY: [1, 0.4, 1] }} transition={{ duration: 1.5, repeat: Infinity }}
           />

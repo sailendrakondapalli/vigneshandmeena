@@ -13,10 +13,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Split vendor chunks for better caching
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          motion: ['framer-motion'],
-          router: ['react-router-dom'],
+        manualChunks: (id) => {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'vendor'
+          if (id.includes('node_modules/framer-motion')) return 'motion'
         },
       },
     },

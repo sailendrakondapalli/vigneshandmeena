@@ -18,19 +18,15 @@ export default function ParallaxDivider({
   const rafRef  = useRef(null)
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768
-    if (!isMobile) return           // desktop uses CSS fixed — no JS needed
+    const isMobile = () => window.innerWidth < 768
 
     const update = () => {
+      if (!isMobile()) return
       const wrap = wrapRef.current
       const img  = imgRef.current
       if (!wrap || !img) return
-
-      const rect = wrap.getBoundingClientRect()
-      // Counter-scroll: as the strip moves up by rect.top (negative),
-      // we shift the image down by the same amount so it appears fixed.
-      // Clamp to keep the image from going too far from center.
-      const offset = Math.max(-200, Math.min(200, -rect.top))
+      const rect   = wrap.getBoundingClientRect()
+      const offset = Math.max(-300, Math.min(300, -rect.top))
       img.style.top = `calc(30% + ${offset}px)`
     }
 
@@ -41,8 +37,10 @@ export default function ParallaxDivider({
 
     update()
     window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', update,   { passive: true })
     return () => {
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', update)
       cancelAnimationFrame(rafRef.current)
     }
   }, [])

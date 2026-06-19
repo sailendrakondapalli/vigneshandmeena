@@ -12,9 +12,7 @@ html {
   scrollbar-width: none;
 }
 
-html::-webkit-scrollbar {
-  display: none;
-}
+html::-webkit-scrollbar { display: none; }
 
 body {
   font-family: 'Lato', sans-serif;
@@ -22,15 +20,12 @@ body {
   color: #2d1b0e;
   width: 100%;
   min-width: 320px;
-  scrollbar-width: none; /* Firefox */
-  overflow-x: clip; /* clip without creating scroll container */
+  scrollbar-width: none;
+  max-width: 100vw;
 }
 
-body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
-}
+body::-webkit-scrollbar { display: none; }
 
-/* Hard reset Vite default root */
 #root {
   width: 100% !important;
   max-width: 100% !important;
@@ -41,10 +36,9 @@ body::-webkit-scrollbar {
   display: block !important;
 }
 
-.font-playfair { font-family: 'Playfair Display', serif; }
+.font-playfair  { font-family: 'Playfair Display', serif; }
 .font-cormorant { font-family: 'Cormorant Garamond', serif; }
 
-/* Gold divider */
 .gold-divider {
   width: 80px;
   height: 2px;
@@ -52,7 +46,6 @@ body::-webkit-scrollbar {
   margin: 0 auto;
 }
 
-/* Section separator line */
 .section-line {
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -60,28 +53,24 @@ body::-webkit-scrollbar {
   background: linear-gradient(90deg, transparent, #d4af37, transparent);
 }
 
-/* Section highlight reveal */
+/* Section reveal animation — always visible, animates in on desktop */
 .section-highlight {
-  opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1), box-shadow 0.85s ease;
+  opacity: 1;
+  transform: none;
+  transition: box-shadow 0.85s ease;
 }
 .section-highlight.in-view {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
-/* Glow pulse on section entry */
 @keyframes sectionGlow {
   0%   { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
   40%  { box-shadow: 0 0 60px 20px rgba(212,175,55,0.13); }
   100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
 }
-.section-glow {
-  animation: sectionGlow 1.4s ease forwards;
-}
+.section-glow { animation: sectionGlow 1.4s ease forwards; }
 
-/* ECG animation */
 @keyframes ecg {
   0%   { stroke-dashoffset: 1000; }
   100% { stroke-dashoffset: 0; }
@@ -92,54 +81,48 @@ body::-webkit-scrollbar {
   animation: ecg 2s ease-in-out forwards;
 }
 
-/* Floating particles */
 @keyframes floatUp {
   0%   { transform: translateY(0) rotate(0deg); opacity: 0.5; }
   100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
 }
 
-/* ── Parallax scroll-over layering ──────────────────────────────────────
-   ParallaxDivider strips use background-attachment:fixed (desktop) or
-   an absolutely positioned image (mobile), both inside overflow:hidden.
-   Content sections sit at z-index:1 with solid opaque backgrounds so
-   they scroll over the image strips naturally on all devices.
-──────────────────────────────────────────────────────────────────────── */
-section,
-footer {
+/* Sections sit above parallax strips */
+section, footer {
   position: relative;
   z-index: 1;
   background-color: #faf8f3;
 }
 
-/* Home hero has its own full bg image — keep it dark */
-#home {
-  background-color: #1a0a04;
-}
+#home { background-color: #1a0a04; }
 
-/* Parallax strip — must stay transparent so the bg image shows */
+/* Parallax strips — transparent so bg image shows through */
 .parallax-strip {
   background: transparent !important;
   background-color: transparent !important;
 }
 
-/* Desktop: show CSS fixed bg, hide the mobile img */
 @media (min-width: 768px) {
-  .parallax-bg-mobile { display: none !important; }
+  .parallax-bg-mobile  { display: none !important; }
   .parallax-bg-desktop { display: block; }
 }
-
-/* Mobile: hide CSS fixed bg (broken on iOS), show the img */
 @media (max-width: 767px) {
   .parallax-bg-desktop { display: none !important; }
-  .parallax-bg-mobile { display: block; }
+  .parallax-bg-mobile  { display: block; }
 }
 
-/* Scroll-to-top */
+/* Syven Events bar — always visible, dark background */
+.syven-credit {
+  opacity: 1 !important;
+  transform: none !important;
+  display: block !important;
+  background: linear-gradient(135deg, #1a0e06, #2d1a0e) !important;
+}
+
 .scroll-top-btn {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  z-index: 999;
+  z-index: 9999;
   background: linear-gradient(135deg, #b8860b, #d4af37);
   color: #fff;
   border: none;

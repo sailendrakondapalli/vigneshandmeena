@@ -68,8 +68,14 @@ export default function Invitation() {
             {...fadeUp(0.28)}
           >
             <p className="font-playfair" style={{ color: '#4a2c1a', fontSize: 'clamp(1.4rem,4vw,2.5rem)' }}>{t.gate_groomName} {t.gate_groomQual}</p>
-            <p className="font-playfair" style={{ color: '#d4af37', fontSize: 'clamp(1.6rem,4vw,2.5rem)', margin: '12px 0' }}>&amp;</p>
+            <p className="font-cormorant" style={{ color: '#8b6914', fontSize: 'clamp(0.85rem,1.8vw,1rem)', fontStyle: 'italic', marginTop: '4px', marginBottom: '16px' }}>
+              {t.invitation_groomJob}
+            </p>
+            <p className="font-playfair" style={{ color: '#d4af37', fontSize: 'clamp(1.6rem,4vw,2.5rem)', margin: '8px 0' }}>&amp;</p>
             <p className="font-playfair" style={{ color: '#4a2c1a', fontSize: 'clamp(1.4rem,4vw,2.5rem)' }}>{t.gate_brideName} {t.gate_brideQual}</p>
+            <p className="font-cormorant" style={{ color: '#8b6914', fontSize: 'clamp(0.85rem,1.8vw,1rem)', fontStyle: 'italic', marginTop: '4px' }}>
+              {t.invitation_brideJob}
+            </p>
           </motion.div>
 
           <motion.p className="font-cormorant" {...fadeUp(0.38)}
